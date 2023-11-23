@@ -1,52 +1,45 @@
 package com.example.moviepedia.data
 
+import com.example.moviepedia.model.Movie
 import com.example.moviepedia.model.MovieDataSource
-import com.example.moviepedia.model.UserMovies
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOf
-import kotlinx.coroutines.flow.map
 
 class MoviesRepository {
 
-    private val userMovies = mutableListOf<UserMovies>()
+    val movies = mutableListOf<Movie>()
 
     init {
-        if (userMovies.isEmpty()) {
-            MovieDataSource.movieList.forEach {
-                userMovies.add(UserMovies(it, isOnWatchList = false))
-            }
+        if (movies.isEmpty()){
+            movies.addAll(MovieDataSource.movieList)
         }
     }
 
-    fun getAllMovies(): Flow<List<UserMovies>> = flowOf(userMovies)
+    fun getMoviesById(id: Long): Flow<Movie>{
+        return flowOf(movies.first { it.id == id})
+    }
 
-    fun getUserMoviesById(id: Long): UserMovies {
-        return userMovies.first {
-            it.movie.id == id
+    fun getWatchlistMovies(): Flow<List<Movie>> {
+        return  flowOf(movies.filter { it.isWatchlist })
+    }
+
+    fun searchMovies(query : String) = flow {
+        val data = movies.filter {
+            it.title.contains(query, ignoreCase = true)
         }
+        emit(data)
     }
 
-    fun getWatchListMovies(): Flow<List<UserMovies>> {
-        return getAllMovies()
-            .map {
-                it.filter { userMovie ->
-                    userMovie.isOnWatchList
-                }
-            }
-    }
-
-    fun addToWatchList(id: Long, isOnWatchList: Boolean): Flow<Boolean> {
-        val index = userMovies.indexOfFirst { it.movie.id == id }
-        val movieToUpdate = userMovies[index]
-        val result =
-            if (movieToUpdate.isOnWatchList != isOnWatchList) {
-                // Movie ditemukan dan status watchlist berbeda, perbarui statusnya
-                userMovies[index] = movieToUpdate.copy(isOnWatchList = isOnWatchList)
-                true
-            } else {
-                // Movie ditemukan tetapi status watchlist sama, tidak ada perubahan
-                false
-            }
+    fun updateMovies(id: Long, newState: Boolean): Flow<Boolean> {
+        val index = movies.indexOfFirst { it.id == id }
+        val result = if (index >= 0){
+            val movie = movies[index]
+            movies[index] = movie.copy(isWatchlist = newState)
+            true
+        } else {
+            false
+        }
         return flowOf(result)
     }
 

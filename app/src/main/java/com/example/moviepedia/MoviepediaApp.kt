@@ -64,22 +64,26 @@ fun MoviepediaApp(
             }
             composable(
                 route = Screen.Watchlist.route
-            ){
-                WatchlistScreen()
+            ) {
+                WatchlistScreen(
+                    navigateToDetail = { id ->
+                        navHostController.navigate(Screen.DetailMovies.createRoute(id))
+                    }
+                )
             }
             composable(
                 route = Screen.Profile.route
-            ){
+            ) {
                 ProfileScreen()
             }
             composable(
                 route = Screen.DetailMovies.route,
                 arguments = listOf(
-                    navArgument("movieId"){
+                    navArgument("movieId") {
                         type = NavType.LongType
                     }
                 )
-            ){
+            ) {
                 val id = it.arguments?.getLong("movieId") ?: 1L
                 DetailScreen(
                     id = id

@@ -1,28 +1,46 @@
 package com.example.moviepedia.ui.screen.detail
 
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material3.MaterialTheme
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.DateRange
+import androidx.compose.material.icons.filled.Face
+import androidx.compose.material.icons.filled.Favorite
+import androidx.compose.material.icons.filled.FavoriteBorder
+import androidx.compose.material.icons.filled.Star
+import androidx.compose.material3.Divider
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.moviepedia.di.Injection
-import com.example.moviepedia.model.UserMovies
+import com.example.moviepedia.model.Movie
 import com.example.moviepedia.ui.ViewModelFactory
 import com.example.moviepedia.ui.common.UiState
 import com.example.moviepedia.ui.theme.MoviepediaTheme
@@ -37,87 +55,128 @@ fun DetailScreen(
     viewModel.uiState.collectAsState(initial = UiState.Loading).value.let { uiState ->
         when (uiState) {
             is UiState.Loading -> {
-                viewModel.getDetailMovieById(id)
+                viewModel.getMovieById(id)
             }
 
             is UiState.Success -> {
                 val data = uiState.data
-                DetailContent(data)
+                DetailContent(
+                    movie = data,
+                    onWatchlistIconClick = { id, newState ->
+                        viewModel.updateMovies(id, newState)
+                    }
+                )
             }
 
-            is UiState.Error -> {
-
-            }
+            is UiState.Error -> {}
         }
     }
-
 }
 
 @Composable
 fun DetailContent(
-    userMovies: UserMovies,
+    movie: Movie,
+    onWatchlistIconClick: (Long, Boolean) -> Unit,
     modifier: Modifier = Modifier
 ) {
-    Column(
-        verticalArrangement = Arrangement.spacedBy(8.dp),
-        modifier = modifier
-            .padding(8.dp)
-            .verticalScroll(rememberScrollState())
+    Box(
+        modifier = Modifier
+            .fillMaxSize()
     ) {
-        Row {
+        Column(
+            modifier = Modifier
+                .verticalScroll(rememberScrollState())
+                .padding(bottom = 16.dp)
+        ) {
             Image(
-                painter = painterResource(id = userMovies.movie.imageCover),
-                contentDescription = null,
-                contentScale = ContentScale.Fit,
+                painter = painterResource(id = movie.imageCover),
+                contentDescription = movie.title,
+                contentScale = ContentScale.Crop,
                 modifier = Modifier
-                    .height(200.dp)
-                    .padding(8.dp)
+                    .fillMaxWidth()
+                    .height(296.dp)
+                    .testTag("scroll")
             )
-            Column (
-                verticalArrangement = Arrangement.spacedBy(8.dp)
-            ){
-                Text(
-                    text = userMovies.movie.title,
-                    style = MaterialTheme.typography.displaySmall.copy(
-                        fontWeight = FontWeight.Bold,
-                        fontSize = 30.sp
-                    )
+            Spacer(modifier = Modifier.height(16.dp))
+            Text(
+                text = movie.title,
+                fontWeight = FontWeight.Bold,
+                fontSize = 20.sp,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 16.dp)
+            )
+            Spacer(modifier = Modifier.height(8.dp))
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
+                modifier = Modifier
+                    .padding(horizontal = 16.dp)
+                    .fillMaxWidth()
+            ) {
+                Icon(
+                    imageVector = Icons.Default.Star,
+                    contentDescription = null,
+                    modifier = Modifier
+                        .size(16.dp)
                 )
-                Row(
-                    horizontalArrangement = Arrangement.spacedBy(8.dp)
-                ) {
-                    Text(text = userMovies.movie.releasedYear.toString())
-                    Text(text = userMovies.movie.duration)
-                }
+                Text(
+                    text = movie.rating.toString(),
+                    modifier = Modifier
+                        .padding(start = 2.dp, end = 8.dp)
+                )
+                Icon(
+                    imageVector = Icons.Default.DateRange,
+                    contentDescription = null,
+                    modifier = Modifier
+                        .size(16.dp)
+                )
+                Text(
+                    text = movie.releasedYear.toString(),
+                    overflow = TextOverflow.Visible,
+                    modifier = Modifier
+                        .padding(start = 4.dp)
+                )
+                Icon(
+                    imageVector = Icons.Default.Face,
+                    contentDescription = null,
+                    modifier = Modifier
+                        .size(16.dp)
+                )
+                Text(
+                    text = movie.director,
+                    overflow = TextOverflow.Visible,
+                    modifier = Modifier
+                        .padding(start = 4.dp)
+                )
             }
-        }
-
-        Text(
-            text = "Storyline",
-            fontWeight = FontWeight.SemiBold
-        )
-        Text(text = userMovies.movie.storyline)
-
-        Row (
-            horizontalArrangement = Arrangement.SpaceBetween
-        ) {
+            Divider(modifier = Modifier.padding(horizontal = 16.dp, vertical = 16.dp))
             Text(
-                text = "Director",
-                fontWeight = FontWeight.SemiBold
+                text = movie.storyline,
+                fontSize = 16.sp,
+                lineHeight = 28.sp,
+                modifier = Modifier
+                    .padding(horizontal = 16.dp)
+                    .fillMaxWidth()
             )
-            Spacer(modifier = Modifier.padding(8.dp))
-            Text(text = userMovies.movie.director)
         }
-
-        Row(
-            horizontalArrangement = Arrangement.SpaceBetween
+        IconButton(
+            onClick = {
+                onWatchlistIconClick(movie.id, movie.isWatchlist)
+            },
+            modifier = Modifier
+                .padding(end = 16.dp, top = 8.dp)
+                .align(Alignment.TopEnd)
+                .clip(CircleShape)
+                .size(40.dp)
+                .background(Color.White)
+                .testTag("add_remove_favorite")
         ) {
-            Text(
-                text = "Rating",
-                fontWeight = FontWeight.SemiBold
+            Icon(
+                imageVector = if (!movie.isWatchlist) Icons.Default.FavoriteBorder else Icons.Default.Favorite,
+                contentDescription = if (!movie.isWatchlist) "Test"
+                else "huh",
+//                tint = if (!isFavorite) Color.Black else Color.Red
             )
-            Spacer(modifier = Modifier.padding(horizontal = 14.dp))
-            Text(text = userMovies.movie.rating.toString())
         }
     }
 }
@@ -126,6 +185,6 @@ fun DetailContent(
 @Composable
 fun DetailScreenPreview() {
     MoviepediaTheme {
-        DetailScreen(1)
+        DetailScreen(3)
     }
 }

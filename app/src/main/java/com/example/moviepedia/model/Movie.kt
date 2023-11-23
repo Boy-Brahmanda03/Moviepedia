@@ -12,4 +12,5 @@ data class Movie(
     val rating: Double,
     val director: String,
     val storyline: String,
+    var isWatchlist: Boolean = false,
 )
