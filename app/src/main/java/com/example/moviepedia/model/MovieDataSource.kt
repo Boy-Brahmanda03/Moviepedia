@@ -7,7 +7,7 @@ object MovieDataSource {
         Movie(
             id = 1,
             title = "Oppenheimer",
-            image = R.drawable.ic_launcher_background,
+            imageCover = R.drawable.cover_openheimer,
             duration = "3h",
             releasedYear = 2023,
             rating = 8.5,
@@ -17,7 +17,7 @@ object MovieDataSource {
         Movie(
             id = 2,
             title = "The Shawshank Redemption",
-            image = R.drawable.ic_launcher_background,
+            imageCover = R.drawable.cover_shawshank,
             duration = "2h 22m",
             releasedYear = 1994,
             rating = 9.3,
@@ -27,7 +27,7 @@ object MovieDataSource {
         Movie(
             id = 3,
             title = "The Godfather",
-            image = R.drawable.ic_launcher_background,
+            imageCover = R.drawable.cover_godfather,
             duration = "2h 55m",
             releasedYear = 1972,
             rating = 9.2,
@@ -37,7 +37,7 @@ object MovieDataSource {
         Movie(
             id = 4,
             title = "The Dark Knight",
-            image = R.drawable.ic_launcher_background,
+            imageCover = R.drawable.cover_dark_knight,
             duration = "2h 32m",
             releasedYear = 2008,
             rating = 9.0,
@@ -47,7 +47,7 @@ object MovieDataSource {
         Movie(
             id = 5,
             title = "12 Angry Men",
-            image = R.drawable.ic_launcher_background,
+            imageCover = R.drawable.cover_12_angry_men,
             duration = "1h 36m",
             releasedYear = 1957,
             rating = 9.0,
@@ -57,7 +57,7 @@ object MovieDataSource {
         Movie(
             id = 6,
             title = "Forrest Gump",
-            image = R.drawable.ic_launcher_background,
+            imageCover = R.drawable.cover_forrest_gump,
             duration = "2h 22m",
             releasedYear = 1994,
             rating = 8.8,
@@ -67,7 +67,7 @@ object MovieDataSource {
         Movie(
             id = 7,
             title = "Fight Club",
-            image = R.drawable.ic_launcher_background,
+            imageCover = R.drawable.cover_fight_club,
             duration = "2h 19m",
             releasedYear = 1999,
             rating = 8.8,
@@ -77,7 +77,7 @@ object MovieDataSource {
         Movie(
             id = 8,
             title = "The Matrix",
-            image = R.drawable.ic_launcher_background,
+            imageCover = R.drawable.cover_thematrix,
             duration = "2h 16m",
             releasedYear = 1999,
             rating = 8.7,
@@ -87,7 +87,7 @@ object MovieDataSource {
         Movie(
             id = 9,
             title = "Spider-Man: Across the Spider-Verse",
-            image = R.drawable.ic_launcher_background,
+            imageCover = R.drawable.cover_spiderman_mutliverse,
             duration = "2h 20m",
             releasedYear = 2023,
             rating = 8.7,
@@ -97,7 +97,7 @@ object MovieDataSource {
         Movie(
             id = 10,
             title = "Spirited Away",
-            image = R.drawable.ic_launcher_background,
+            imageCover = R.drawable.cover_spirited_away,
             duration = "2h 16m",
             releasedYear = 2001,
             rating = 8.6,
@@ -105,7 +105,4 @@ object MovieDataSource {
             storyline = "The fanciful adventures of a ten-year-old girl named Chihiro, who discovers a secret world when she and her family get lost and venture through a hillside tunnel. When her parents undergo a mysterious transformation, Chihiro must fend for herself as she encounters strange spirits, assorted creatures and a grumpy sorceress who seeks to prevent her from returning to the human world."
         ),
     )
-
-
-    val recommendationMovieList = movieList.shuffled()
 }

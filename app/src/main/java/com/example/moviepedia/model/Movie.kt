@@ -1,9 +1,12 @@
 package com.example.moviepedia.model
 
+import androidx.annotation.DrawableRes
+
 data class Movie(
     val id: Long,
     val title: String,
-    val image: Int,
+    @DrawableRes
+    val imageCover: Int,
     val duration: String,
     val releasedYear: Int,
     val rating: Double,

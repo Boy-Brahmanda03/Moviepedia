@@ -1,3 +1,8 @@
 <resources>
     <string name="app_name">Moviepedia</string>
+    <string name="menu_home">Home</string>
+    <string name="menu_watchlist">Watchlist</string>
+    <string name="menu_profile">Profile</string>
+    <string name="trending_section">Trending</string>
+    <string name="top_movie_section">Top movies for you</string>
 </resources>
