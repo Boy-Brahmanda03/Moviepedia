@@ -1,15 +1,19 @@
 package com.example.moviepedia.ui.screen.watchlist
 
-import androidx.compose.material3.Text
+import android.widget.Toast
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.example.moviepedia.R
 import com.example.moviepedia.di.Injection
 import com.example.moviepedia.model.Movie
 import com.example.moviepedia.ui.ViewModelFactory
 import com.example.moviepedia.ui.common.UiState
+import com.example.moviepedia.ui.component.EmptyContent
 import com.example.moviepedia.ui.screen.home.MovieList
 import com.example.moviepedia.ui.theme.MoviepediaTheme
 
@@ -38,7 +42,10 @@ fun WatchlistScreen(
                 )
             }
 
-            is UiState.Error -> {}
+            is UiState.Error -> {
+                Toast.makeText(LocalContext.current, uiState.errorMessage, Toast.LENGTH_SHORT)
+                    .show()
+            }
         }
     }
 }
@@ -58,7 +65,7 @@ fun WatchlistContent(
             modifier = modifier
         )
     } else {
-        Text(text = "No Watchlist")
+        EmptyContent(contentText = stringResource(R.string.empty_watchlist))
     }
 }
 

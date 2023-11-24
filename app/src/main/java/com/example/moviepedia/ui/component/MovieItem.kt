@@ -16,6 +16,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
@@ -71,10 +72,11 @@ fun MovieItem(
         Icon(
             painter =
             if (isWatchlist){
-                painterResource(id = R.drawable.bookmark)
+                painterResource(id = R.drawable.baseline_bookmark_24)
             } else {
-                painterResource(id = R.drawable.bookmark_border)
+                painterResource(id = R.drawable.baseline_bookmark_border_24)
             },
+            tint = if (isWatchlist) MaterialTheme.colorScheme.primary else Color.Black,
             contentDescription = null,
             modifier = Modifier
                 .padding(8.dp)

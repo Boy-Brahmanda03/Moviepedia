@@ -5,4 +5,10 @@
     <string name="menu_profile">Profile</string>
     <string name="trending_section">Trending</string>
     <string name="top_movie_section">Top movies for you</string>
+    <string name="profile_name">Kadek Boy Brahmanda Satrya Montana</string>
+    <string name="profile_email">boybrahmanda03@gmail.com</string>
+    <string name="add_to_watchlist">Add to watchlist</string>
+    <string name="remove_from_watchlist">Remove from watchlist</string>
+    <string name="data_movie_not_found">Data Movie Not Found</string>
+    <string name="empty_watchlist">Empty Watchlist</string>
 </resources>

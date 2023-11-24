@@ -1,10 +1,6 @@
 package com.example.moviepedia
 
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.AccountCircle
-import androidx.compose.material.icons.filled.Home
-import androidx.compose.material.icons.filled.ThumbUp
 import androidx.compose.material3.Icon
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
@@ -13,6 +9,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.NavGraph.Companion.findStartDestination
@@ -108,17 +105,17 @@ fun BottomBar(
         val navigationItem = listOf(
             NavigationItem(
                 title = stringResource(id = R.string.menu_home),
-                icon = Icons.Default.Home,
+                icon = painterResource(id = R.drawable.baseline_home_24),
                 screen = Screen.Home
             ),
             NavigationItem(
                 title = stringResource(id = R.string.menu_watchlist),
-                icon = Icons.Default.ThumbUp,
+                icon = painterResource(id = R.drawable.baseline_local_movies_24),
                 screen = Screen.Watchlist
             ),
             NavigationItem(
                 title = stringResource(id = R.string.menu_profile),
-                icon = Icons.Default.AccountCircle,
+                icon = painterResource(id = R.drawable.baseline_account_circle_24),
                 screen = Screen.Profile
             ),
         )
@@ -138,7 +135,7 @@ fun BottomBar(
                         launchSingleTop = true
                     }
                 },
-                icon = { Icon(imageVector = item.icon, contentDescription = item.title) }
+                icon = { Icon(painter = item.icon, contentDescription = item.title) }
             )
         }
     }

@@ -1,23 +1,27 @@
 package com.example.moviepedia.ui.screen.home
 
+import android.widget.Toast
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.example.moviepedia.R
 import com.example.moviepedia.di.Injection
 import com.example.moviepedia.model.Movie
 import com.example.moviepedia.ui.ViewModelFactory
 import com.example.moviepedia.ui.common.UiState
+import com.example.moviepedia.ui.component.EmptyContent
 import com.example.moviepedia.ui.component.MovieItem
 import com.example.moviepedia.ui.component.MySearchBar
 import com.example.moviepedia.ui.theme.MoviepediaTheme
@@ -48,7 +52,10 @@ fun HomeScreen(
                     modifier = modifier
                 )
             }
-            is UiState.Error -> {}
+            is UiState.Error -> {
+                Toast.makeText(LocalContext.current, uiState.errorMessage, Toast.LENGTH_SHORT)
+                    .show()
+            }
         }
 
     }
@@ -66,7 +73,7 @@ fun HomeContent(
     Column (modifier = modifier) {
         MySearchBar(query = query, onQueryChange = onQueryChange)
         if (movies.isEmpty()){
-            Text(text = "Kosong")
+            EmptyContent(contentText = stringResource(R.string.data_movie_not_found))
         } else {
             MovieList(
                 movies = movies,

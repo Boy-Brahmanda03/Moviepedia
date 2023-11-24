@@ -1,5 +1,6 @@
 package com.example.moviepedia.ui.screen.detail
 
+import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
@@ -16,13 +17,11 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.DateRange
-import androidx.compose.material.icons.filled.Face
-import androidx.compose.material.icons.filled.Favorite
-import androidx.compose.material.icons.filled.FavoriteBorder
 import androidx.compose.material.icons.filled.Star
 import androidx.compose.material3.Divider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -31,14 +30,17 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.example.moviepedia.R
 import com.example.moviepedia.di.Injection
 import com.example.moviepedia.model.Movie
 import com.example.moviepedia.ui.ViewModelFactory
@@ -68,7 +70,10 @@ fun DetailScreen(
                 )
             }
 
-            is UiState.Error -> {}
+            is UiState.Error -> {
+                Toast.makeText(LocalContext.current, uiState.errorMessage, Toast.LENGTH_SHORT)
+                    .show()
+            }
         }
     }
 }
@@ -80,8 +85,9 @@ fun DetailContent(
     modifier: Modifier = Modifier
 ) {
     Box(
-        modifier = Modifier
+        modifier = modifier
             .fillMaxSize()
+            .background(MaterialTheme.colorScheme.background)
     ) {
         Column(
             modifier = Modifier
@@ -122,7 +128,7 @@ fun DetailContent(
                 Text(
                     text = movie.rating.toString(),
                     modifier = Modifier
-                        .padding(start = 2.dp, end = 8.dp)
+                        .padding(start = 4.dp, end = 8.dp)
                 )
                 Icon(
                     imageVector = Icons.Default.DateRange,
@@ -134,19 +140,19 @@ fun DetailContent(
                     text = movie.releasedYear.toString(),
                     overflow = TextOverflow.Visible,
                     modifier = Modifier
-                        .padding(start = 4.dp)
+                        .padding(start = 4.dp, end = 8.dp)
                 )
                 Icon(
-                    imageVector = Icons.Default.Face,
+                    painter = painterResource(id = R.drawable.baseline_schedule_24),
                     contentDescription = null,
                     modifier = Modifier
                         .size(16.dp)
                 )
                 Text(
-                    text = movie.director,
+                    text = movie.duration,
                     overflow = TextOverflow.Visible,
                     modifier = Modifier
-                        .padding(start = 4.dp)
+                        .padding(start = 4.dp, end = 8.dp)
                 )
             }
             Divider(modifier = Modifier.padding(horizontal = 16.dp, vertical = 16.dp))
@@ -158,6 +164,25 @@ fun DetailContent(
                     .padding(horizontal = 16.dp)
                     .fillMaxWidth()
             )
+            Divider(modifier = Modifier.padding(horizontal = 16.dp, vertical = 16.dp))
+            Row(
+                modifier = Modifier
+                    .padding(horizontal = 16.dp)
+            ) {
+                Text(
+                    text = "Director",
+                    overflow = TextOverflow.Visible,
+                    modifier = Modifier
+                        .padding(start = 4.dp)
+                )
+                Spacer(modifier = Modifier.padding(horizontal = 16.dp, vertical = 16.dp))
+                Text(
+                    text = movie.director,
+                    overflow = TextOverflow.Visible,
+                    modifier = Modifier
+                        .padding(start = 4.dp)
+                )
+            }
         }
         IconButton(
             onClick = {
@@ -169,13 +194,17 @@ fun DetailContent(
                 .clip(CircleShape)
                 .size(40.dp)
                 .background(Color.White)
-                .testTag("add_remove_favorite")
+                .testTag("add_remove_watchlist")
         ) {
             Icon(
-                imageVector = if (!movie.isWatchlist) Icons.Default.FavoriteBorder else Icons.Default.Favorite,
-                contentDescription = if (!movie.isWatchlist) "Test"
-                else "huh",
-//                tint = if (!isFavorite) Color.Black else Color.Red
+                painter = if (!movie.isWatchlist)
+                    painterResource(id = R.drawable.baseline_bookmark_border_24)
+                else
+                    painterResource(id = R.drawable.baseline_bookmark_24),
+                contentDescription = if (!movie.isWatchlist) stringResource(R.string.add_to_watchlist) else stringResource(
+                    R.string.remove_from_watchlist
+                ),
+                tint = if (!movie.isWatchlist) Color.Black else MaterialTheme.colorScheme.primary
             )
         }
     }
