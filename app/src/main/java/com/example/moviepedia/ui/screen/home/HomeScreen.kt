@@ -12,6 +12,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -35,11 +36,12 @@ fun HomeScreen(
     navigateToDetail: (Long) -> Unit
 ) {
     val query by viewModel.query
-    viewModel.uiState.collectAsState(initial = UiState.Loading).value.let {uiState ->
+    viewModel.uiState.collectAsState(initial = UiState.Loading).value.let { uiState ->
         when (uiState) {
             is UiState.Loading -> {
                 viewModel.search(query)
             }
+
             is UiState.Success -> {
                 HomeContent(
                     query = query,
@@ -52,6 +54,7 @@ fun HomeScreen(
                     modifier = modifier
                 )
             }
+
             is UiState.Error -> {
                 Toast.makeText(LocalContext.current, uiState.errorMessage, Toast.LENGTH_SHORT)
                     .show()
@@ -66,14 +69,18 @@ fun HomeContent(
     query: String,
     onQueryChange: (String) -> Unit,
     movies: List<Movie>,
-    onWatchlistIconClick : (Long, Boolean) -> Unit,
+    onWatchlistIconClick: (Long, Boolean) -> Unit,
     navigateToDetail: (Long) -> Unit,
     modifier: Modifier = Modifier
 ) {
-    Column (modifier = modifier) {
+    Column(modifier = modifier) {
         MySearchBar(query = query, onQueryChange = onQueryChange)
-        if (movies.isEmpty()){
-            EmptyContent(contentText = stringResource(R.string.data_movie_not_found))
+        if (movies.isEmpty()) {
+            EmptyContent(
+                contentText = stringResource(R.string.data_movie_not_found),
+                modifier = Modifier
+                    .testTag("empty_data")
+            )
         } else {
             MovieList(
                 movies = movies,
@@ -87,13 +94,15 @@ fun HomeContent(
 @Composable
 fun MovieList(
     movies: List<Movie>,
-    onWatchlistIconClick : (Long, Boolean) -> Unit,
+    onWatchlistIconClick: (Long, Boolean) -> Unit,
     navigateToDetail: (Long) -> Unit,
     modifier: Modifier = Modifier
 ) {
     LazyColumn(
         verticalArrangement = Arrangement.spacedBy(16.dp),
-        modifier = modifier.padding(8.dp)
+        modifier = modifier
+            .padding(8.dp)
+            .testTag("MovieList")
     ) {
         items(movies, key = { it.id }) { movie ->
             MovieItem(
@@ -102,7 +111,7 @@ fun MovieList(
                 image = movie.imageCover,
                 duration = movie.duration,
                 year = movie.releasedYear,
-                isWatchlist = movie.isWatchlist ,
+                isWatchlist = movie.isWatchlist,
                 onWatchlistIconClick = onWatchlistIconClick,
                 modifier = Modifier
                     .clickable {

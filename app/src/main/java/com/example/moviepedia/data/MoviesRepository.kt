@@ -8,7 +8,7 @@ import kotlinx.coroutines.flow.flowOf
 
 class MoviesRepository {
 
-    val movies = mutableListOf<Movie>()
+    private val movies = mutableListOf<Movie>()
 
     init {
         if (movies.isEmpty()){
